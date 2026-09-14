@@ -12,3 +12,17 @@ services:
       test: ["CMD-SHELL", "pg_isready -U app"]
       interval: 2s
       retries: 30
+  api:
+    build: { context: ./api }
+    environment:
+      DATABASE_URL: postgres://app:app@postgres:5432/app
+      PORT: "3001"
+    command: sh -c "npm run migrate && node dist/server.js"
+    depends_on: { postgres: { condition: service_healthy } }
+    ports: ["3001:3001"]
+  web:
+    build: { context: ./web }
+    environment:
+      API_URL: http://api:3001
+    depends_on: [api]
+    ports: ["3000:3000"]
