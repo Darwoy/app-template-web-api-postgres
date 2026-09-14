@@ -28,12 +28,12 @@ jobs:
         with:
           context: ./web
           push: true
-          tags: ghcr.io/koosha-t/app-template-web-api-postgres/web:${{ steps.sha.outputs.short }}
+          tags: ghcr.io/darwoy/app-template-web-api-postgres/web:${{ steps.sha.outputs.short }}
       - uses: docker/build-push-action@v6
         with:
           context: ./api
           push: true
-          tags: ghcr.io/koosha-t/app-template-web-api-postgres/api:${{ steps.sha.outputs.short }}
+          tags: ghcr.io/darwoy/app-template-web-api-postgres/api:${{ steps.sha.outputs.short }}
       - name: commit image tags into the chart
         run: |
           sed -i "s/^\(\s*tag:\s*\).*/\1\"${{ steps.sha.outputs.short }}\"/" k8s/chart/values.yaml
