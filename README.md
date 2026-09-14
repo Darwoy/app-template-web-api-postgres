@@ -75,3 +75,6 @@ manifest and the gate itself stays hard (`soft_fail` is never set):
   both call `node node_modules/.bin/node-pg-migrate` directly.
 - `aquasecurity/trivy-action` is pinned to `v0.36.0`; the action's tags are
   `v`-prefixed.
+- `kyverno/action-install-cli` is pinned to `release: v1.19.1`. The action
+  defaults to v1.10.3, which predates the `ValidatingPolicy` type these policies
+  use, so the CI check would fail to load them.

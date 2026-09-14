@@ -47,6 +47,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: azure/setup-helm@v4
       - uses: kyverno/action-install-cli@v0.2.0
+        # The action defaults to v1.10.3, which predates ValidatingPolicy.
+        # Pin the version the policies were written and tested against.
+        with: { release: v1.19.1 }
       - run: bash scripts/lint-manifests.sh
       - run: |
           helm template preview k8s/chart -f k8s/chart/values-small.yaml \
