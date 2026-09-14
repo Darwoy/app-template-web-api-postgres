@@ -1,11 +1,19 @@
 {
   "name": "app-template-web-api-postgres",
   "private": true,
-  "workspaces": ["api", "web", "tests"],
+  "workspaces": [
+    "api",
+    "web",
+    "tests"
+  ],
   "scripts": {
     "test": "npm run test --workspace=api && npm run test --workspace=web",
     "scenarios": "npm run scenarios --workspace=tests",
-    "rules": "npm run rules --workspace=tests"
+    "rules": "npm run rules --workspace=tests",
+    "lock:packages": "bash scripts/lock-packages.sh",
+    "lint:manifests": "bash scripts/lint-manifests.sh"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  }
 }

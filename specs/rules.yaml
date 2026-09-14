@@ -1,0 +1,3 @@
+- id: R-1
+  rule: An empty note is never saved
+  origin: template
