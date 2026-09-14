@@ -13,9 +13,19 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
+      # The tag commit is pushed by an installed GitHub App, which is the only
+      # identity a ruleset can name as a bypass actor. github-actions[bot] is a
+      # platform feature, not an installed app, so it can never be named.
+      - name: mint an installation token for the release app
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
       - id: sha
         run: echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
       - uses: docker/setup-buildx-action@v3
