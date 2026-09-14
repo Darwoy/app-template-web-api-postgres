@@ -86,3 +86,7 @@ manifest and the gate itself stays hard (`soft_fail` is never set):
   `RELEASE_APP_ID` and `RELEASE_APP_PRIVATE_KEY`. Because the secrets live at
   the org, every repository the builder creates inherits them with no per-repo
   setup.
+- Release images are built for `linux/amd64,linux/arm64`. A single-arch amd64
+  image fails to pull on an arm64 node with `no match for platform in manifest`,
+  which is what a developer machine and the local kind cluster are. Pull-request
+  builds stay single-arch: they only prove the image builds and scan it.
