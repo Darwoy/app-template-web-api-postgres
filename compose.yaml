@@ -17,7 +17,7 @@ services:
     environment:
       DATABASE_URL: postgres://app:app@postgres:5432/app
       PORT: "3001"
-    command: sh -c "npm run migrate && node dist/server.js"
+    command: sh -c "node node_modules/.bin/node-pg-migrate -m migrations -j js up && node dist/server.js"
     depends_on: { postgres: { condition: service_healthy } }
     ports: ["3001:3001"]
   web:

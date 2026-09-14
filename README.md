@@ -64,3 +64,14 @@ manifest and the gate itself stays hard (`soft_fail` is never set):
 | CKV_K8S_43 image should use digest | Images are pinned to the immutable git-sha tag CI commits into `values.yaml`. A floating tag is what the Kyverno policy forbids. |
 | CKV_K8S_40 high UID | Containers run as their image's own non-root user (node 1000, postgres 70). `runAsNonRoot`, dropped capabilities, seccomp and a read-only root filesystem are the controls. |
 | CKV_K8S_35 secrets as files | Database credentials reach the process as environment variables, which is what the Postgres client and the migration tool read. |
+
+## CI notes
+
+- Runtime images drop npm (`rm -rf /usr/local/lib/node_modules/npm ...`) and run
+  `apk upgrade --no-cache`. Without both, the image scan fails on CRITICAL/HIGH
+  findings that come from the base image rather than from this code: npm's
+  bundled `tar`, and an OpenSSL fix the `node:22-alpine` build lags behind.
+  Nothing at runtime needs a package manager — the migration Job and compose
+  both call `node node_modules/.bin/node-pg-migrate` directly.
+- `aquasecurity/trivy-action` is pinned to `v0.36.0`; the action's tags are
+  `v`-prefixed.
