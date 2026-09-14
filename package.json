@@ -1,0 +1,11 @@
+{
+  "name": "app-template-web-api-postgres",
+  "private": true,
+  "workspaces": ["api", "web", "tests"],
+  "scripts": {
+    "test": "npm run test --workspace=api && npm run test --workspace=web",
+    "scenarios": "npm run scenarios --workspace=tests",
+    "rules": "npm run rules --workspace=tests"
+  },
+  "engines": { "node": ">=22" }
+}
