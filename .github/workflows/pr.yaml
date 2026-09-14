@@ -89,10 +89,10 @@ jobs:
           context: ./${{ matrix.component }}
           push: false
           load: true
-          tags: ghcr.io/koosha-t/app-template-web-api-postgres/${{ matrix.component }}:pr-${{ github.sha }}
+          tags: ghcr.io/darwoy/app-template-web-api-postgres/${{ matrix.component }}:pr-${{ github.sha }}
       - uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ghcr.io/koosha-t/app-template-web-api-postgres/${{ matrix.component }}:pr-${{ github.sha }}
+          image-ref: ghcr.io/darwoy/app-template-web-api-postgres/${{ matrix.component }}:pr-${{ github.sha }}
           severity: CRITICAL,HIGH
           exit-code: "1"
           ignore-unfixed: true
