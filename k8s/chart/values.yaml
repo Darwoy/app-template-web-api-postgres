@@ -3,10 +3,10 @@ host: template.127.0.0.1.sslip.io
 images:
   web:
     repository: ghcr.io/darwoy/app-template-web-api-postgres/web
-    tag: "70722b0"
+    tag: "b480358"
   api:
     repository: ghcr.io/darwoy/app-template-web-api-postgres/api
-    tag: "70722b0"
+    tag: "b480358"
 
 replicas: 1
 
