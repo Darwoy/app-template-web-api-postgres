@@ -7,10 +7,13 @@ metadata:
     {{- include "app.labels" . | nindent 4 }}
   annotations:
     {{- include "app.acceptedFindings" . | nindent 4 }}
-    argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    # Wave 1: after the Secret and Postgres (wave 0) are healthy, before the
+    # application (wave 2). A PreSync hook cannot work here -- it runs before
+    # any resource of the release exists, including the Secret it reads.
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   backoffLimit: 6
+  ttlSecondsAfterFinished: 600
   template:
     metadata:
       labels:

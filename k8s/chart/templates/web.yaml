@@ -18,6 +18,8 @@ metadata:
   name: web
   namespace: {{ .Release.Namespace }}
   annotations:
+    # Wave 2: after the migration Job (wave 1) has completed.
+    argocd.argoproj.io/sync-wave: "2"
     {{- include "app.acceptedFindings" . | nindent 4 }}
   labels:
     {{- include "app.labels" . | nindent 4 }}
