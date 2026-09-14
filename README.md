@@ -24,7 +24,7 @@ Pinned at first build, 14 September 2026:
 - Node 22 (containers and CI), npm workspaces
 - Next.js 16.3.5, React 19.2.8
 - Fastify 5.12.4, pg 8.23.0, node-pg-migrate 9.0.0
-- TypeScript 7.0.2 (api), 5.x (web), Vitest 3.2.7
+- TypeScript 7.0.2 (api), 5.x (web), Vitest 3.2.7, Playwright 1.63.0
 
 ## Lockfiles
 
