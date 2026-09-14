@@ -78,3 +78,11 @@ manifest and the gate itself stays hard (`soft_fail` is never set):
 - `kyverno/action-install-cli` is pinned to `release: v1.19.1`. The action
   defaults to v1.10.3, which predates the `ValidatingPolicy` type these policies
   use, so the CI check would fail to load them.
+- The release workflow pushes the image-tag commit as an installed **GitHub
+  App**, not as `github-actions[bot]`. A ruleset can only name an installed app
+  as a bypass actor; GitHub Actions is a platform feature rather than an
+  installed app, so it can never appear in that list. The app needs
+  `Contents: read and write`, an org-wide installation, and two org secrets:
+  `RELEASE_APP_ID` and `RELEASE_APP_PRIVATE_KEY`. Because the secrets live at
+  the org, every repository the builder creates inherits them with no per-repo
+  setup.
