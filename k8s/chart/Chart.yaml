@@ -1,0 +1,6 @@
+apiVersion: v2
+name: web-api-postgres
+description: Paved-road chart for the web-api-postgres archetype
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -43,3 +43,24 @@ npm run lock:packages
   with no fixed forward release. Vitest is a dev dependency and is not present in
   either runtime image. Below the CRITICAL/HIGH threshold the CI scan gates on.
   Revisit when a patched 3.x is published.
+
+## Policy and scanning
+
+`npm run lint:manifests` renders the chart into the namespace Argo CD deploys it
+to, checks it against `k8s/policies`, runs Checkov over the rendered manifests
+and both Dockerfiles, and finally proves the policies still bite by running them
+against a deliberately bad manifest. CI runs the same checks.
+
+The policies are `policies.kyverno.io/v1 ValidatingPolicy` (CEL), not
+`kyverno.io/v1 ClusterPolicy`: Kyverno 1.19 deprecates ClusterPolicy and removes
+it in 1.20.
+
+Three Checkov findings are accepted rather than fixed, and each workload carries
+the reason as a `checkov.io/skip` annotation, so the exception travels with the
+manifest and the gate itself stays hard (`soft_fail` is never set):
+
+| Finding | Why it is accepted |
+|---------|--------------------|
+| CKV_K8S_43 image should use digest | Images are pinned to the immutable git-sha tag CI commits into `values.yaml`. A floating tag is what the Kyverno policy forbids. |
+| CKV_K8S_40 high UID | Containers run as their image's own non-root user (node 1000, postgres 70). `runAsNonRoot`, dropped capabilities, seccomp and a read-only root filesystem are the controls. |
+| CKV_K8S_35 secrets as files | Database credentials reach the process as environment variables, which is what the Postgres client and the migration tool read. |

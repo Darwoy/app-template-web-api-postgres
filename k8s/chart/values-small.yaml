@@ -1,0 +1,2 @@
+# The "small" tier. Tiers only ever change size, never shape.
+replicas: 1

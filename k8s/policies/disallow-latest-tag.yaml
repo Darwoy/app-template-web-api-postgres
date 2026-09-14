@@ -1,0 +1,28 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: disallow-latest-tag
+spec:
+  validationActions: [Deny]
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [apps]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [deployments, statefulsets]
+      - apiGroups: [batch]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [jobs]
+  variables:
+    - name: allContainers
+      expression: >-
+        object.spec.template.spec.containers +
+        object.spec.template.spec.?initContainers.orValue([])
+  validations:
+    - expression: >-
+        variables.allContainers.all(c, c.image.contains(':'))
+      message: "Images must use a pinned tag, never none."
+    - expression: >-
+        variables.allContainers.all(c, !c.image.endsWith(':latest'))
+      message: "Images must not use the latest tag."

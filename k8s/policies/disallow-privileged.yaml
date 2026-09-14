@@ -1,0 +1,28 @@
+# Kyverno 1.19 deprecates ClusterPolicy (removed in 1.20); these are the
+# CEL-based ValidatingPolicy replacements. They run in CI against the rendered
+# chart (npm run lint:manifests), not as cluster admission.
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: disallow-privileged
+spec:
+  validationActions: [Deny]
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [apps]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [deployments, statefulsets]
+      - apiGroups: [batch]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [jobs]
+  variables:
+    - name: allContainers
+      expression: >-
+        object.spec.template.spec.containers +
+        object.spec.template.spec.?initContainers.orValue([])
+  validations:
+    - expression: >-
+        variables.allContainers.all(c, c.?securityContext.?privileged.orValue(false) == false)
+      message: "Privileged containers are not allowed."
