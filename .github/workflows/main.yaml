@@ -28,6 +28,9 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
       - id: sha
         run: echo "short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - id: image
+        # A generated repository has its own name, and GHCR wants it lowercase.
+        run: echo "repo=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
       # Images must run on both arm64 (developer machines, the local kind
       # cluster) and amd64 (cloud nodes), so build a manifest list for both.
       - uses: docker/setup-qemu-action@v3
@@ -42,13 +45,13 @@ jobs:
           context: ./web
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/darwoy/app-template-web-api-postgres/web:${{ steps.sha.outputs.short }}
+          tags: ${{ steps.image.outputs.repo }}/web:${{ steps.sha.outputs.short }}
       - uses: docker/build-push-action@v6
         with:
           context: ./api
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/darwoy/app-template-web-api-postgres/api:${{ steps.sha.outputs.short }}
+          tags: ${{ steps.image.outputs.repo }}/api:${{ steps.sha.outputs.short }}
       - name: commit image tags into the chart
         run: |
           sed -i "s/^\(\s*tag:\s*\).*/\1\"${{ steps.sha.outputs.short }}\"/" k8s/chart/values.yaml
