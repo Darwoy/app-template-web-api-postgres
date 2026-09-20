@@ -34,6 +34,13 @@ spec:
         app: api
         {{- include "app.labels" . | nindent 8 }}
     spec:
+      {{- if .Values.runtimeClassName }}
+      runtimeClassName: {{ .Values.runtimeClassName }}
+      {{- end }}
+      {{- if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{- end }}
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
@@ -51,6 +58,11 @@ spec:
           envFrom:
             - secretRef:
                 name: postgres
+            {{- if .Values.aiSecret }}
+            # AI_BASE_URL, AI_MODEL and AI_TOKEN for api/src/ai.ts: calls leave through the door guard.
+            - secretRef:
+                name: {{ .Values.aiSecret }}
+            {{- end }}
           ports:
             - containerPort: 3001
           resources:

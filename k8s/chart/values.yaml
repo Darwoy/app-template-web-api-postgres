@@ -26,3 +26,9 @@ postgres:
   user: app
   password: app-local-only
   database: app
+
+# Set by the builder's front desk per project; the defaults are what the template's own preview uses.
+runtimeClassName: gvisor      # generated code runs under gVisor; Postgres (an upstream image) does not
+imagePullSecret: ""           # a dockerconfigjson Secret in the namespace, for private images
+aiSecret: ""                  # a Secret holding AI_BASE_URL, AI_MODEL, AI_TOKEN for api/src/ai.ts
+builderNamespace: builder     # where the door guard lives; the verify Job may reach it

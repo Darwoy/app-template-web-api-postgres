@@ -5,6 +5,11 @@ import { defineConfig } from "@playwright/test";
 // suites run anywhere a Postgres is reachable - a laptop, or the build room.
 const external = Boolean(process.env.BASE_URL);
 
+// compose.yaml publishes Postgres on host port 5433 (5432 is often taken on a laptop). CI's scenarios
+// job runs `docker compose up` without setting DATABASE_URL, so default to that mapping here; the build
+// room and any caller that sets DATABASE_URL keep their value. (Found by a build session in step 3.)
+process.env.DATABASE_URL ??= "postgres://app:app@localhost:5433/app";
+
 export default defineConfig({
   testDir: ".",
   timeout: 30_000,

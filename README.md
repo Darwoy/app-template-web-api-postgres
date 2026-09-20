@@ -25,6 +25,16 @@ Pinned at first build, 14 September 2026:
 - Next.js 16.3.5, React 19.2.8
 - Fastify 5.12.4, pg 8.23.0, node-pg-migrate 9.0.0
 - TypeScript 7.0.2 (api), 5.x (web), Vitest 3.2.7, Playwright 1.63.0
+- @anthropic-ai/sdk 0.127.0 (api), used only through `api/src/ai.ts`
+
+## AI calls
+
+Anything the app asks a model goes through `ask()` in `api/src/ai.ts`, which talks to the builder's
+door guard (`AI_BASE_URL`) with the session's token (`AI_TOKEN`); the guard holds the real key, so no
+credential ever lives in this repository or in a preview namespace. With `AI_BASE_URL` unset - CI, or
+a laptop without a guard - `ask()` returns a marked stand-in answer so the suites still run.
+
+AGENTS.md stays at nine numbered lines.
 
 ## Lockfiles
 
